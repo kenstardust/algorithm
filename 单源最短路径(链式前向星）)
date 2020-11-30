@@ -1,0 +1,64 @@
+#include<stdio.h>
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+const int maxin = 500001;
+const int maxn = 10001;
+const long long int inf = 2147483647;
+using namespace std;
+int n, m, s, cnt = 0;
+struct EDGE 
+{
+	int next;
+	int to;
+	int length;
+};
+EDGE edge[maxin];
+int head[maxin];
+long long int dis[maxn];
+bool visited[maxn];
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin >> n >> m >> s;
+	for (int i = 0; i <= n; i++) dis[i] = inf;
+	memset(visited, false, sizeof(visited));
+	
+	for (int i = 1; i <= m; i++)
+	{
+		int fi, gi, wi;
+		cin >> fi >> gi >> wi;
+		edge[++cnt].next = head[fi];
+		edge[cnt].to = gi;
+		edge[cnt].length = wi;
+		head[fi] = cnt;
+	}
+
+	dis[s] = 0;
+	long long int minn;
+	int get = s;
+	while (!visited[get])//即搜完整张图
+	{
+		visited[get] = true;//已做为过起点
+		for (int i = head[get]; i != 0; i = edge[i].next)//链式前向星搜边
+		{
+			if (!visited[edge[i].to] && dis[edge[i].to]>dis[get] + edge[i].length)
+				dis[edge[i].to] = dis[get] + edge[i].length;//更新操作
+		}
+		minn = inf;
+		for (int i = 1; i <= n; i++)
+		{
+			if (!visited[i] && minn>dis[i])//取新的最小值
+			{
+				minn = dis[i];
+				get = i;
+			}
+		}
+	}
+	for (int j = 1; j <= n; j++) cout << dis[j] << " ";
+
+	return 0;
+}
