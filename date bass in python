@@ -1,0 +1,12 @@
+import sqlite3
+import numpy as np
+import pandas
+conn=sqlite3.connect('D:\data bass\TEST1.db')
+curs=conn.cursor()
+curs.execute('select *from student')
+ans=curs.fetchall()
+print(ans)
+x=np.array(ans)
+print(x)
+curs.close()
+conn.close()
