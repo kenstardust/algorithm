@@ -1,0 +1,18 @@
+import numpy as np
+from scipy.optimize import  linprog
+
+#规定x的取值范围
+x1=(0,None) 
+x2=(0,None)
+x3=(0,None)
+
+#目标函数系数
+c=np.array([2,3,1])
+#不等式约束条件系数
+A_ub=np.array([[-1,-4,-2],[-3,-2,0]])#A一定是二维
+B_ub=np.array([-8,-6])
+#等式约束条件系数
+A_eq=np.array([[],[]])#A一定是二维
+B_eq=np.arry()
+print(linprog(c,A_ub,B_ub,bounds=(x1,x2,x3)))
+
