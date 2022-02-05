@@ -1,0 +1,54 @@
+import numpy
+from scipy.optimize import linprog
+import sys
+import math
+
+#判断是否为整数（当一个值与他的下取整或上取整相差小于1e-6时，为整数）
+def judge(L, t=1e-6):
+    for i in L:
+        if (i-math.floor(i)) < t or (math.ceil(i)-i) < t:
+            return False
+    return True
+
+
+def intergerpro(c, A, B, Aeq, Beq, t=1.0e-6):
+    res = linprog(c, A, B, Aeq, Beq)
+    if not res.success:#整数规划问题不可解时终止分支（定界）
+        return [sys.maxsize]
+    if judge(res.x):
+        bestX = [10000]*len(c)#抄的视频上的代码，意义不明
+    else:
+        bestX = res.x
+    bestVal = sum(x*y for x, y in zip(c, bestX))
+    if all(((x-math.floor(x)) < t or (math.ceil(x)-x) < t) for x in bestX):
+        return (bestVal, bestX)#整数解
+    else:#加约束条件
+        ind = [i for i, x in enumerate(bestX) if (x-math.floor(x) > t) and (math.ceil(x)-x) > t][0]
+        newcol1 = [0] * len(A[0])
+        newcol2 = [0] * len(A[0])
+        newcol1[ind] = -1#新不等式约束的系数
+        newcol2[ind] = 1#新不等式约束的系数
+        newA1 = A.copy()
+        newA2 = A.copy()
+        newA1.append(newcol1)#追加新不等式约束系数
+        newA2.append(newcol2)#追加新不等式约束系数
+        newB1 = B.copy()
+        newB2 = B.copy()
+        newB1.append(-math.ceil(bestX[ind]))#新不等式约束的值
+        newB2.append(math.floor(bestX[ind]))#新不等式约束的值
+        r1 = intergerpro(c, newA1, newB1, Aeq, Beq)#分支
+        r2 = intergerpro(c, newA2, newB2, Aeq, Beq)#分支
+        if r1[0] < r2[0]:
+            return r1
+        else:
+            return r2
+
+
+c = [3, 4, 1]#问题方程
+A = [[-1, -6, -2],[-2, 0, 0]]#不等式约束的系数
+B = [-5, -3]#不等式约束右边的值
+Aeq = [[0, 0, 0]]#等式约束（aeq与beq都为0，代表0*x1+0*x2+0*x3=0，因此这里不写这个参数也行）
+Beq = [0]#等式约束值
+print(intergerpro(c, A, B, Aeq, Beq))
+
+//分支定界代码
