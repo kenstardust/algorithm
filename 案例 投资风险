@@ -1,0 +1,37 @@
+#案例投资风险
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.optimize as op
+ 
+#定义a的取值
+a = 0
+profit_list = [] #记录最大收益
+a_list = [] #记录a的取值
+
+while a<0.05:
+    #定义决策变量取值范围
+    x1=(0,None)
+ 
+    #定义目标函数系数
+    c=np.array([-0.05,-0.27,-0.19,-0.185,-0.185]) 
+    #定义不等式约束条件左边系数
+    #hstack()增加列 zeros零矩阵 diag 主对角矩阵
+    A = np.hstack((np.zeros((4,1)),np.diag([0.025,0.015,0.055,0.026])))
+    #定义不等式约束条件右边系数
+    # ones单位矩阵
+    b=a*np.ones((4,1));
+    #定义等式约束条件左边系数
+    Aeq=np.array([[1,1.01,1.02,1.045,1.065]])
+    #定义等式约束条件右边系数
+    beq=np.array([1]);
+    #求解
+    res=op.linprog(c,A,b,Aeq,beq,bounds=(x1,x1,x1,x1,x1))
+    profit = -res.fun
+    profit_list.append(profit)
+    a_list.append(a)
+    a = a+0.001
+ 
+#绘制风险偏好a与最大收益的曲线图    
+plt.figure(figsize=(10,7))
+plt.plot(a_list,profit_list)
+plt.xlabel('a');plt.ylabel('Profit')
