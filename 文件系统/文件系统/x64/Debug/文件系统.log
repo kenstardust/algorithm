@@ -1,0 +1,9 @@
+﻿  Mdf.cpp
+D:\workdata\文件系统\文件系统\Mdf.cpp(46,19): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+  Users.cpp
+D:\workdata\文件系统\文件系统\Users.cpp(75,25): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+D:\workdata\文件系统\文件系统\Users.cpp(79,28): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  文件系统.cpp
+D:\workdata\文件系统\文件系统\文件系统.cpp(73,21): warning C4804: “>=”: 在操作中使用类型“bool”不安全
+  正在生成代码...
+  文件系统.vcxproj -> D:\workdata\文件系统\x64\Debug\文件系统.exe
